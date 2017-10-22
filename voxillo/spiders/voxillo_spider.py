@@ -146,7 +146,7 @@ class ProductSpider(scrapy.Spider):
             yield item
 
 
-        '''
+        
         #Rabobank
         self.driver = webdriver.PhantomJS()
         self.driver.set_window_size(1120, 550)
@@ -174,22 +174,44 @@ class ProductSpider(scrapy.Spider):
         if matches:
             date = parse(matches.group(0))
             date = str(date).split()[0]
-            
-        f = open("output.csv","a+")
         
         for divRow in divRows:
             head = divRow.xpath("div/h2/text()").extract()
             if(head==target1):
                 divRow = divRow.xpath("div")
-                rabo_scraper(divRow, date)
-            
+                rabo_dlist = rabo_scraper(divRow, date)
+                for data in rabo_dlist:
+                    item['CountryCode'] = data['CountryCode']
+                    item['ProviderName'] = data['ProviderName']
+                    item['ProductName'] = data['ProductName']
+                    item['LoanType'] = data['LoanType']
+                    item['Period'] = data['Period']
+                    item['Rate'] = data['Rate']
+                    item['CoverageStart'] = data['CoverageStart']
+                    item['CoverageEnd'] = data['CoverageEnd']
+                    item['CheckDate'] = data['CheckDate']
+                    item['ValidSince'] = data['ValidSince']
+                    item['NHG'] = data['NHG']
+                    yield item
+
             if(head==target2):
                 #log.msg("div row ----- %s" % str(divRow.xpath("div/div/table").extract()), level = log.DEBUG)
                 divRow = divRow.xpath("div")
-                rabo_scraper(divRow, date)
+                rabo_dlist = rabo_scraper(divRow, date)
+                for data in rabo_dlist:
+                    item['CountryCode'] = data['CountryCode']
+                    item['ProviderName'] = data['ProviderName']
+                    item['ProductName'] = data['ProductName']
+                    item['LoanType'] = data['LoanType']
+                    item['Period'] = data['Period']
+                    item['Rate'] = data['Rate']
+                    item['CoverageStart'] = data['CoverageStart']
+                    item['CoverageEnd'] = data['CoverageEnd']
+                    item['CheckDate'] = data['CheckDate']
+                    item['ValidSince'] = data['ValidSince']
+                    item['NHG'] = data['NHG']
+                    yield item
 
-            f.close()
-        '''
 
 def removeJaar(str):
     str = str.replace("jaar","")

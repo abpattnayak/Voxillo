@@ -1,2 +1,4 @@
 projects:
-  voxillo_spider.py: 248089
+    default: 248089
+images:
+    default: abpattnayak/test
